@@ -1,0 +1,30 @@
+# Node modules (if using any build tools or packages)
+node_modules/
+
+# macOS system files
+.DS_Store
+
+# Windows system files
+Thumbs.db
+ehthumbs.db
+
+# Editor configs
+*.swp
+*.swo
+*.sublime-workspace
+*.vscode/
+
+# Logs
+*.log
+
+# Compiled / build files (if you later add build steps)
+dist/
+build/
+
+# Backup files
+*.bak
+*.tmp
+*.orig
+
+# Any secrets or local config
+*.env
