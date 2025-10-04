@@ -1,5 +1,10 @@
-# Node modules (if using any build tools or packages)
+# Dependencies
 node_modules/
+
+# Build output
+dist/
+artifacts/
+*.zip
 
 # macOS system files
 .DS_Store
@@ -12,12 +17,14 @@ ehthumbs.db
 *.swp
 *.swo
 *.sublime-workspace
-*.vscode/
+.vscode/
 
 # Logs
 *.log
 
-# Compiled / build files (if you later add build steps)
+# Environment files
+.env
+.env.local
 dist/
 build/
 

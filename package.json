@@ -1,0 +1,17 @@
+{
+    "name": "my-zap-links",
+    "version": "1.4.0",
+    "description": "Create and manage custom short links for quick access to your favorite sites.",
+    "scripts": {
+        "clean": "rm -rf dist && rm -rf artifacts && rm -f artifacts/my-zap-links.zip",
+        "prebuild": "npm run clean && mkdir -p dist && mkdir -p artifacts",
+        "build": "cp manifest.json dist/ && cp src/* dist/",
+        "package": "rm -f artifacts/my-zap-links.zip && cd dist && zip -r ../artifacts/my-zap-links.zip .",
+        "dev": "npm run build && npm run package"
+    },
+    "author": {
+        "name": "Prathmesh Patel",
+        "url": "https://github.com/pratham-p"
+    },
+    "license": "ISC"
+}
