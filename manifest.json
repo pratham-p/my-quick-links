@@ -10,9 +10,14 @@
   "background": {
     "service_worker": "background.js"
   },
+  "icons": {
+    "128": "icons/icon128.png",
+    "48": "icons/icon48.png",
+    "16": "icons/icon16.png"
+  },
   "action": {
     "default_popup": "manage.html",
-    "default_title": "My Zap Links Manager"
+    "default_title": "My Zap Links"
   },
   "omnibox": { "keyword": "my" }
 }
