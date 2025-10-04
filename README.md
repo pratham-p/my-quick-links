@@ -19,7 +19,7 @@ Build simple keywords for complex or lengthy URLs to navigate, saving time and e
 ## Example Usage
 
 ```text
-my gmail    → redirects to https://mail.google.com/
-my google   → redirects to https://www.google.com/
-my github pratham → redirects to https://github.com/pratham-p
+my gmail            → redirects to https://mail.google.com/
+my google           → redirects to https://www.google.com/
+my github pratham   → redirects to https://github.com/pratham-p
 my github microsoft → redirects to https://github.com/microsoft
