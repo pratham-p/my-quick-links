@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "My Links",
+  "name": "myLinks",
   "version": "1.0",
-  "description": "Custom short links like my/google -> https://google.com",
+  "description": "Custom short links like `my google` -> https://google.com",
   "permissions": [
     "storage",
     "tabs"
@@ -12,8 +12,7 @@
   },
   "action": {
     "default_popup": "manage.html",
-    "default_title": "My Links Manager"
+    "default_title": "myLinks Manager"
   },
   "omnibox": { "keyword": "my" }
 }
-

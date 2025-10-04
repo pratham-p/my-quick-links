@@ -13,11 +13,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Load and render links in table
   async function loadLinks() {
-    const data = await chrome.storage.local.get("myLinks");
-    const myLinks = data.myLinks || {};
-    tableBody.innerHTML = "";
+    try {
+      const data = await chrome.storage.local.get("myLinks");
+      const myLinks = data.myLinks || {};
+      tableBody.innerHTML = "";
 
-    for (const k in myLinks) {
+      for (const k in myLinks) {
       const tr = document.createElement("tr");
 
       const tdKey = document.createElement("td");
@@ -31,9 +32,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       delBtn.textContent = "Delete";
       delBtn.className = "delete-btn";
       delBtn.addEventListener("click", async () => {
-        delete myLinks[k];
-        await chrome.storage.local.set({ myLinks });
-        loadLinks();
+        try {
+          delete myLinks[k];
+          await chrome.storage.local.set({ myLinks });
+          await loadLinks();
+        } catch (error) {
+          console.error(`myLinks Extension Error: Failed to delete shortcut: ${error.message}`);
+        }
       });
       tdAction.appendChild(delBtn);
 
@@ -42,41 +47,83 @@ document.addEventListener("DOMContentLoaded", async () => {
       tr.appendChild(tdAction);
       tableBody.appendChild(tr);
     }
+    } catch (error) {
+      console.error('myLinks Extension Error: Unable to load links:', error);
+      alert('Failed to load shortcuts. Please try refreshing the page.');
+    }
   }
   await loadLinks();
 
   // Handle form submit
-  document.getElementById("goForm").addEventListener("submit", async (e) => {
+  document.getElementById("myForm").addEventListener("submit", async (e) => {
     e.preventDefault();
     const shortcut = keyInput.value.trim();
     const dest = urlInput.value.trim();
-    if (!shortcut || !dest) return;
+    
+    // Input validation
+    if (!shortcut) {
+      alert('Please enter a shortcut key');
+      return;
+    }
+    if (!dest) {
+      alert('Please enter a destination URL');
+      return;
+    }
+    
+    try {
+      // Validate URL format
+      new URL(dest);
+      
+      const data = await chrome.storage.local.get("myLinks");
+      const myLinks = data.myLinks || {};
+      
+      // Confirm if overwriting existing shortcut
+      if (myLinks[shortcut] && !confirm(`Shortcut "${shortcut}" already exists. Do you want to overwrite it?`)) {
+        return;
+      }
+      
+      myLinks[shortcut] = dest;
+      await chrome.storage.local.set({ myLinks });
 
-    const data = await chrome.storage.local.get("myLinks");
-    const myLinks = data.myLinks || {};
-    myLinks[shortcut] = dest;
-    await chrome.storage.local.set({ myLinks });
-
-    if (key) {
-      window.location.href = dest;
-    } else {
-      keyInput.value = "";
-      urlInput.value = "";
-      await loadLinks();
+      if (key) {
+        window.location.href = dest;
+      } else {
+        keyInput.value = "";
+        urlInput.value = "";
+        await loadLinks();
+      }
+    } catch (error) {
+      if (error instanceof TypeError) {
+        alert('Please enter a valid URL (include http:// or https://)');
+      } else {
+        console.error('myLinks Extension Error: Unable to save shortcut:', error);
+        alert(`Failed to save shortcut: ${error.message}`);
+      }
     }
   });
 
   // Export
   document.getElementById("exportBtn").addEventListener("click", async () => {
-    const data = await chrome.storage.local.get("myLinks");
-    const myLinks = data.myLinks || {};
-    const blob = new Blob([JSON.stringify(myLinks, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "my-links-backup.json";
-    a.click();
-    URL.revokeObjectURL(url);
+    try {
+      const data = await chrome.storage.local.get("myLinks");
+      const myLinks = data.myLinks || {};
+      
+      if (Object.keys(myLinks).length === 0) {
+        alert('No shortcuts to export');
+        return;
+      }
+      
+      const blob = new Blob([JSON.stringify(myLinks, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "my-links-backup.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('myLinks Extension Error: Unable to export shortcuts:', error);
+      alert(`Failed to export shortcuts: ${error.message}`);
+    }
   });
 
   // Import
@@ -87,19 +134,53 @@ document.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("importFile").addEventListener("change", async (event) => {
     const file = event.target.files[0];
     if (!file) return;
-    const text = await file.text();
+    
+    if (file.type !== 'application/json') {
+      alert('Please select a JSON file');
+      return;
+    }
+    
     try {
+      const text = await file.text();
       const imported = JSON.parse(text);
-      if (typeof imported === "object" && imported !== null) {
-        const data = await chrome.storage.local.get("myLinks");
-        const myLinks = data.myLinks || {};
-        Object.assign(myLinks, imported);
-        await chrome.storage.local.set({ myLinks });
-        await loadLinks();
-        alert("Imported successfully!");
-      } else alert("Invalid file format.");
-    } catch {
-      alert("Failed to parse file.");
+      
+      if (typeof imported !== "object" || imported === null) {
+        alert("Invalid file format. The file must contain a JSON object.");
+        return;
+      }
+      
+      // Validate URLs in imported data
+      for (const [key, url] of Object.entries(imported)) {
+        try {
+          new URL(url);
+        } catch (error) {
+          alert(`Invalid URL found for shortcut "${key}". Import cancelled.`);
+          return;
+        }
+      }
+      
+      const data = await chrome.storage.local.get("myLinks");
+      const myLinks = data.myLinks || {};
+      
+      // Check for conflicts
+      const conflicts = Object.keys(imported).filter(key => myLinks[key]);
+      if (conflicts.length > 0) {
+        if (!confirm(`${conflicts.length} existing shortcut(s) will be overwritten. Continue?`)) {
+          return;
+        }
+      }
+      
+      Object.assign(myLinks, imported);
+      await chrome.storage.local.set({ myLinks });
+      await loadLinks();
+      alert(`Successfully imported ${Object.keys(imported).length} shortcut(s)!`);
+    } catch (error) {
+      console.error('myLinks Extension Error: Unable to import shortcuts:', error);
+      if (error instanceof SyntaxError) {
+        alert("Failed to parse file. Please make sure it's a valid JSON file.");
+      } else {
+        alert(`Failed to import shortcuts: ${error.message}`);
+      }
     }
   });
 });

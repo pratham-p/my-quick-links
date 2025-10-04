@@ -1,44 +1,43 @@
-// chrome.webNavigation.onBeforeNavigate.addListener(async (details) => {
-//   try {
-//     const url = new URL(details.url);
-
-//     if ((url.protocol === "http:" || url.protocol === "https:") && url.hostname === "my") {
-//       const path = url.pathname.replace("/", ""); // e.g. "google"
-
-//       // Load dictionary from storage
-//       const data = await chrome.storage.local.get("myLinks");
-//       const myLinks = data.myLinks || {};
-
-//       if (myLinks[path]) {
-//         // Redirect to mapped URL
-//         chrome.tabs.update(details.tabId, { url: myLinks[path] });
-//       } else {
-//         // Redirect to manage page to add mapping
-//         chrome.tabs.update(details.tabId, { 
-//           url: chrome.runtime.getURL(`manage.html?key=${path}`) 
-//         });
-//       }
-//     }
-//   } catch (err) {
-//     console.error("Navigation check failed:", err);
-//   }
-// });
-
 // Listen for omnibox input
-chrome.omnibox.onInputEntered.addListener((text) => {
+chrome.omnibox.onInputEntered.addListener(async (text) => {
   chrome.storage.local.get("myLinks", (result) => {
-    const myLinks = result.myLinks || {};
-    if (myLinks[text]) {
-      // Redirect to mapped URL
-      chrome.tabs.update({ url: myLinks[text] });
-    } else {
-      // Redirect to manage page to add new shortcut
-      chrome.tabs.update({ url: chrome.runtime.getURL(`manage.html?key=${text}`) });
+    try {
+      const myLinks = result.myLinks || {};
+
+      if (myLinks[text]) {
+        // Redirect to mapped URL
+        chrome.tabs.update({ url: myLinks[text] });
+      } else {
+        // Redirect to manage page to add new shortcut
+        chrome.tabs.update({ url: chrome.runtime.getURL(`manage.html?key=${text}`) });
+      }
+    } catch(error){
+      console.error("myLinks Extension Error: ", error)
     }
   });
 });
-
-// Optional: change omnibox suggestion text
+// Change omnibox suggestion text based on matching keywords from storage
 chrome.omnibox.onInputChanged.addListener((text, suggest) => {
-  suggest([{ content: text, description: `My link for: ${text}` }]);
+  chrome.storage.local.get("myLinks", (result) => {
+    const myLinks = result.myLinks || {};
+    const input = text.trim().toLowerCase();
+
+    // Find matching keys
+    const suggestions = Object.keys(myLinks)
+      .filter(key => key.toLowerCase().includes(input))
+      .map(key => ({
+        content: key,
+        description: `mylink for: ${key} → ${myLinks[key]}`
+      }));
+
+    // If no matches, show the raw input as a suggestion
+    if (suggestions.length === 0 && input) {
+      suggestions.push({
+        content: input,
+        description: `Create new mylink for: ${input}`
+      });
+    }
+
+    suggest(suggestions);
+  });
 });
