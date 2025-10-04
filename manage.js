@@ -14,18 +14,18 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Load and render links in table
   async function loadLinks() {
     try {
-      const data = await chrome.storage.local.get("myLinks");
-      const myLinks = data.myLinks || {};
+      const data = await chrome.storage.local.get("myZapLinks");
+      const myZapLinks = data.myZapLinks || {};
       tableBody.innerHTML = "";
 
-      for (const k in myLinks) {
+      for (const k in myZapLinks) {
       const tr = document.createElement("tr");
 
       const tdKey = document.createElement("td");
       tdKey.textContent = k;
 
       const tdUrl = document.createElement("td");
-      tdUrl.textContent = myLinks[k];
+      tdUrl.textContent = myZapLinks[k];
 
       const tdAction = document.createElement("td");
       const delBtn = document.createElement("button");
@@ -33,11 +33,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       delBtn.className = "delete-btn";
       delBtn.addEventListener("click", async () => {
         try {
-          delete myLinks[k];
-          await chrome.storage.local.set({ myLinks });
+          delete myZapLinks[k];
+          await chrome.storage.local.set({ myZapLinks });
           await loadLinks();
         } catch (error) {
-          console.error(`myLinks Extension Error: Failed to delete shortcut: ${error.message}`);
+          console.error(`myZapLinks Extension Error: Failed to delete shortcut: ${error.message}`);
         }
       });
       tdAction.appendChild(delBtn);
@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       tableBody.appendChild(tr);
     }
     } catch (error) {
-      console.error('myLinks Extension Error: Unable to load links:', error);
+      console.error('myZapLinks Extension Error: Unable to load links:', error);
       alert('Failed to load shortcuts. Please try refreshing the page.');
     }
   }
@@ -74,16 +74,16 @@ document.addEventListener("DOMContentLoaded", async () => {
       // Validate URL format
       new URL(dest);
       
-      const data = await chrome.storage.local.get("myLinks");
-      const myLinks = data.myLinks || {};
+      const data = await chrome.storage.local.get("myZapLinks");
+      const myZapLinks = data.myZapLinks || {};
       
       // Confirm if overwriting existing shortcut
-      if (myLinks[shortcut] && !confirm(`Shortcut "${shortcut}" already exists. Do you want to overwrite it?`)) {
+      if (myZapLinks[shortcut] && !confirm(`Shortcut "${shortcut}" already exists. Do you want to overwrite it?`)) {
         return;
       }
       
-      myLinks[shortcut] = dest;
-      await chrome.storage.local.set({ myLinks });
+      myZapLinks[shortcut] = dest;
+      await chrome.storage.local.set({ myZapLinks });
 
       if (key) {
         window.location.href = dest;
@@ -96,7 +96,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (error instanceof TypeError) {
         alert('Please enter a valid URL (include http:// or https://)');
       } else {
-        console.error('myLinks Extension Error: Unable to save shortcut:', error);
+        console.error('myZapLinks Extension Error: Unable to save shortcut:', error);
         alert(`Failed to save shortcut: ${error.message}`);
       }
     }
@@ -105,15 +105,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Export
   document.getElementById("exportBtn").addEventListener("click", async () => {
     try {
-      const data = await chrome.storage.local.get("myLinks");
-      const myLinks = data.myLinks || {};
+      const data = await chrome.storage.local.get("myZapLinks");
+      const myZapLinks = data.myZapLinks || {};
       
-      if (Object.keys(myLinks).length === 0) {
+      if (Object.keys(myZapLinks).length === 0) {
         alert('No shortcuts to export');
         return;
       }
       
-      const blob = new Blob([JSON.stringify(myLinks, null, 2)], { type: "application/json" });
+      const blob = new Blob([JSON.stringify(myZapLinks, null, 2)], { type: "application/json" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -121,7 +121,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       a.click();
       URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('myLinks Extension Error: Unable to export shortcuts:', error);
+      console.error('myZapLinks Extension Error: Unable to export shortcuts:', error);
       alert(`Failed to export shortcuts: ${error.message}`);
     }
   });
@@ -159,23 +159,23 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
       }
       
-      const data = await chrome.storage.local.get("myLinks");
-      const myLinks = data.myLinks || {};
+      const data = await chrome.storage.local.get("myZapLinks");
+      const myZapLinks = data.myZapLinks || {};
       
       // Check for conflicts
-      const conflicts = Object.keys(imported).filter(key => myLinks[key]);
+      const conflicts = Object.keys(imported).filter(key => myZapLinks[key]);
       if (conflicts.length > 0) {
         if (!confirm(`${conflicts.length} existing shortcut(s) will be overwritten. Continue?`)) {
           return;
         }
       }
       
-      Object.assign(myLinks, imported);
-      await chrome.storage.local.set({ myLinks });
+      Object.assign(myZapLinks, imported);
+      await chrome.storage.local.set({ myZapLinks });
       await loadLinks();
       alert(`Successfully imported ${Object.keys(imported).length} shortcut(s)!`);
     } catch (error) {
-      console.error('myLinks Extension Error: Unable to import shortcuts:', error);
+      console.error('myZapLinks Extension Error: Unable to import shortcuts:', error);
       if (error instanceof SyntaxError) {
         alert("Failed to parse file. Please make sure it's a valid JSON file.");
       } else {

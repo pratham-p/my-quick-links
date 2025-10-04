@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "myLinks",
-  "version": "1.0",
-  "description": "Custom short links like `my google` -> https://google.com",
+  "name": "My Zap Links",
+  "version": "1.3",
+  "description": "Create and manage custom short links for quick access to your favorite sites. Example: 'my gmail' -> https://mail.google.com",
   "permissions": [
     "storage",
     "tabs"
@@ -12,7 +12,7 @@
   },
   "action": {
     "default_popup": "manage.html",
-    "default_title": "myLinks Manager"
+    "default_title": "My Zap Links Manager"
   },
   "omnibox": { "keyword": "my" }
 }
