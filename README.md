@@ -19,3 +19,5 @@ Easily create and manage your own custom shortcuts for your favorite URLs right 
 ```text
 my google   → redirects to https://www.google.com/
 my github   → redirects to https://github.com/
+my github pratham → redirects to https://github.com/pratham-p
+my github microsoft → redirects to https://github.com/microsoft
