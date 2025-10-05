@@ -1,6 +1,6 @@
 # My Quick Links
 
-A lightweight Chrome/Edge extension to create, manage, and quickly access your favorite sites using custom short links with the `my` omnibox keyword.
+A lightweight Chromium-based browser extension to create, manage, and quickly access your favorite sites using custom short links with the `my` omnibox keyword.
 
 Easily create and manage your own custom shortcuts for frequently used sites. Use easy-to-remember keywords that feel natural to you, right from your browser. With the `my` omnibox keyword, you can instantly jump to any site you’ve set up—just type `my <shortcut>` in the address bar. 
 
