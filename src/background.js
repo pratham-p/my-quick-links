@@ -1,40 +1,40 @@
 // Listen for omnibox input
 chrome.omnibox.onInputEntered.addListener(async (text) => {
-  chrome.storage.local.get("myZapLinks", (result) => {
+  chrome.storage.local.get("myQuickLinks", (result) => {
     try {
-      const myZapLinks = result.myZapLinks || {};
+      const myQuickLinks = result.myQuickLinks || {};
 
-      if (myZapLinks[text]) {
+      if (myQuickLinks[text]) {
         // Redirect to mapped URL
-        chrome.tabs.update({ url: myZapLinks[text] });
+        chrome.tabs.update({ url: myQuickLinks[text] });
       } else {
         // Redirect to manage page to add new shortcut
         chrome.tabs.update({ url: chrome.runtime.getURL(`manage.html?key=${text}`) });
       }
     } catch(error){
-      console.error("myZapLinks Extension Error: ", error)
+      console.error("myQuickLinks Extension Error: ", error)
     }
   });
 });
 // Change omnibox suggestion text based on matching keywords from storage
 chrome.omnibox.onInputChanged.addListener((text, suggest) => {
-  chrome.storage.local.get("myZapLinks", (result) => {
-    const myZapLinks = result.myZapLinks || {};
+  chrome.storage.local.get("myQuickLinks", (result) => {
+    const myQuickLinks = result.myQuickLinks || {};
     const input = text.trim().toLowerCase();
 
     // Find matching keys
-    const suggestions = Object.keys(myZapLinks)
+    const suggestions = Object.keys(myQuickLinks)
       .filter(key => key.toLowerCase().includes(input))
       .map(key => ({
         content: key,
-        description: `myZaplink for: ${key} → ${myZapLinks[key]}`
+        description: `myQuicklink for: ${key} → ${myQuickLinks[key]}`
       }));
 
     // If no matches, show the raw input as a suggestion
     if (suggestions.length === 0 && input) {
       suggestions.push({
         content: input,
-        description: `Create new myZapLink for: ${input}`
+        description: `Create new myQuickLink for: ${input}`
       });
     }
 

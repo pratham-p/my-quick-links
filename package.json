@@ -1,12 +1,12 @@
 {
-    "name": "my-zap-links",
+    "name": "my-quick-links",
     "version": "1.4.0",
     "description": "Create and manage custom short links for quick access to your favorite sites.",
     "scripts": {
-        "clean": "rm -rf dist && rm -rf artifacts && rm -f artifacts/my-zap-links.zip",
+        "clean": "rm -rf dist && rm -rf artifacts && rm -f artifacts/my-quick-links.zip",
         "prebuild": "npm run clean && mkdir -p dist/icons && mkdir -p artifacts",
         "build": "cp manifest.json dist/ && cp src/* dist/ && cp icons/* dist/icons/",
-        "package": "rm -f artifacts/my-zap-links.zip && cd dist && zip -r ../artifacts/my-zap-links.zip .",
+        "package": "rm -f artifacts/my-quick-links.zip && cd dist && zip -r ../artifacts/my-quick-links.zip .",
         "dev": "npm run build && npm run package"
     },
     "author": {

@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "My Zap Links",
+  "name": "My Quick Links",
   "version": "1.4",
   "description": "Create and manage custom short links for quick access to your favorite sites. Example: 'my gmail' -> https://mail.google.com",
   "permissions": [
@@ -17,7 +17,7 @@
   },
   "action": {
     "default_popup": "manage.html",
-    "default_title": "My Zap Links"
+    "default_title": "My Quick Links"
   },
   "omnibox": { "keyword": "my" }
 }

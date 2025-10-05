@@ -1,8 +1,8 @@
-# My Zap Links
+# My Quick Links
 
-A lightweight Chrome/Edge extension to create, manage and zap through your favorite sites using custom short links with the `my` omnibox keyword.
+A lightweight Chrome/Edge extension to create, manage, and quickly access your favorite sites using custom short links with the `my` omnibox keyword.
 
-Easily create and manage your own custom shortcuts for your frequently used sites. Use easy-to-remember keywords that you relate naturally to, right from your browser. With the `my` omnibox keyword, you can instantly jump to any site you’ve set up—just type `my <shortcut>` in the address bar. 
+Easily create and manage your own custom shortcuts for frequently used sites. Use easy-to-remember keywords that feel natural to you, right from your browser. With the `my` omnibox keyword, you can instantly jump to any site you’ve set up—just type `my <shortcut>` in the address bar. 
 
 Build simple keywords for complex or lengthy URLs to navigate, saving time and effort. This is perfect for boosting productivity, reducing repetitive typing, and keeping your most-used links at your fingertips. Whether you’re a power user or just want a faster way to access your go-to sites, this extension streamlines your browsing experience.
 
