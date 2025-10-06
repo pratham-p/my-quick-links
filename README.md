@@ -35,3 +35,6 @@ Suggestions
 
 Manage Quick Links
 ![manage quick links](images/manage.png)
+
+## Privacy
+[Privacy Policy](privacy.md)
