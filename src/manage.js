@@ -11,11 +11,52 @@ document.addEventListener("DOMContentLoaded", async () => {
     keyInput.value = key;
   }
 
+  // Utility functions for storage model
+  async function getLinks() {
+    try {
+      // Try sync storage first
+      const syncData = await chrome.storage.sync.get("myQuickLinks");
+      if (syncData.myQuickLinks) {
+        // Also update local storage to maintain backup
+        await chrome.storage.local.set({ myQuickLinks: syncData.myQuickLinks });
+        return syncData.myQuickLinks;
+      }
+      // If sync is empty, check local storage
+      const localData = await chrome.storage.local.get("myQuickLinks");
+      if (localData.myQuickLinks) {
+        // If local has data but sync doesn't, restore to sync
+        try {
+          await chrome.storage.sync.set({ myQuickLinks: localData.myQuickLinks });
+        } catch (error) {
+          console.warn("Failed to restore sync from local:", error);
+        }
+      }
+      return localData.myQuickLinks || {};
+    } catch (error) {
+      // If sync fails, use local
+      console.warn("Sync storage failed, using local:", error);
+      const localData = await chrome.storage.local.get("myQuickLinks");
+      return localData.myQuickLinks || {};
+    }
+  }
+
+  async function saveLinks(links) {
+    // Always save to both storages for redundancy
+    const savePromises = [
+      chrome.storage.local.set({ myQuickLinks: links }),
+      chrome.storage.sync.set({ myQuickLinks: links }).catch(error => {
+        console.warn("Failed to save to sync storage:", error);
+      })
+    ];
+    
+    // Wait for both operations to complete
+    await Promise.all(savePromises);
+  }
+
   // Load and render links in table
   async function loadLinks() {
     try {
-      const data = await chrome.storage.local.get("myQuickLinks");
-      const myQuickLinks = data.myQuickLinks || {};
+      const myQuickLinks = await getLinks();
       tableBody.innerHTML = "";
 
       for (const k in myQuickLinks) {
@@ -34,7 +75,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       delBtn.addEventListener("click", async () => {
         try {
           delete myQuickLinks[k];
-          await chrome.storage.local.set({ myQuickLinks });
+          await saveLinks(myQuickLinks);
           await loadLinks();
         } catch (error) {
           console.error(`myQuickLinks Extension Error: Failed to delete shortcut: ${error.message}`);
@@ -74,8 +115,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       // Validate URL format
       new URL(dest);
       
-      const data = await chrome.storage.local.get("myQuickLinks");
-      const myQuickLinks = data.myQuickLinks || {};
+      const myQuickLinks = await getLinks();
       
       // Confirm if overwriting existing shortcut
       if (myQuickLinks[shortcut] && !confirm(`Shortcut "${shortcut}" already exists. Do you want to overwrite it?`)) {
@@ -83,7 +123,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
       
       myQuickLinks[shortcut] = dest;
-      await chrome.storage.local.set({ myQuickLinks });
+      await saveLinks(myQuickLinks);
 
       if (key) {
         window.location.href = dest;
