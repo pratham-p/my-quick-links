@@ -23,3 +23,15 @@ my gmail            → redirects to https://mail.google.com/
 my google           → redirects to https://www.google.com/
 my github pratham   → redirects to https://github.com/pratham-p
 my github microsoft → redirects to https://github.com/microsoft
+```
+
+## Screenshots
+
+myQuickLinks Extension
+![myQuickLinks extension](images/extension.png)
+
+Suggestions
+![suggestion](images/suggestion.png)
+
+Manage Quick Links
+![manage quick links](images/manage.png)
