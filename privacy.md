@@ -22,7 +22,6 @@ Your data:
 ## Permissions
 The extension requests minimal permissions:
 - **`storage`** — to save your custom links locally or sync them across your Chrome profiles.
-- **`tabs`** — to open or redirect to the saved destination URLs when you use your quick links.
 
 These permissions are only used to provide the core functionality of the extension.
 
