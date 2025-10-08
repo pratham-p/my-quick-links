@@ -30,19 +30,22 @@
     <label>Shortcut: <input type="text" id="key"></label><br>
     <label>Destination URL: <input type="text" id="url"></label><br>
     <button type="submit">Save</button>
+    <span id="saveMsg" style="margin-left:8px; color:green; font-size:13px; display:none;">Saved!</span>
   </form>
 
-  <h3>All Links</h3>
-  <table id="linksTable">
-    <thead>
-      <tr>
-        <th>Shortcut</th>
-        <th>Destination URL</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+  <div id="linksDiv" style="display: none;">
+    <h3>All Links</h3>
+    <table id="linksTable">
+      <thead>
+        <tr>
+          <th>Shortcut</th>
+          <th>Destination URL</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
 
   <h3>Manage Links</h3>
   <div style="display: flex; gap: 8px; align-items: center;">
@@ -51,7 +54,7 @@
     <input type="file" id="importFile" accept="application/json" style="display:none;"/>
     <button id="importBtn">Import</button>
   </div>
-
+  
   <script src="manage.js"></script>
 </body>
 </html>

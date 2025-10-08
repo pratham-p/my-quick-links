@@ -2,7 +2,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const params = new URLSearchParams(window.location.search);
   const key = params.get("key");
   const isPopup = params.get("popup") === "true";
-
+  
+  const linksDiv = document.getElementById("linksDiv");
   const manageBtn = document.getElementById("manageBtn");
   if (isPopup) {
     manageBtn.style.display = "block";
@@ -10,6 +11,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       chrome.runtime.openOptionsPage();
       window.close(); // Close the popup after opening options
     });
+  } else {
+    linksDiv.style.display = "block";
   }
 
   const keyInput = document.getElementById("key");
@@ -110,7 +113,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     e.preventDefault();
     const shortcut = keyInput.value.trim();
     const dest = urlInput.value.trim();
-    
+
     // Input validation
     if (!shortcut) {
       alert('Please enter a shortcut key');
@@ -120,20 +123,28 @@ document.addEventListener("DOMContentLoaded", async () => {
       alert('Please enter a destination URL');
       return;
     }
-    
+
     try {
       // Validate URL format
       new URL(dest);
-      
+
       const myQuickLinks = await getLinks();
-      
+
       // Confirm if overwriting existing shortcut
       if (myQuickLinks[shortcut] && !confirm(`Shortcut "${shortcut}" already exists. Do you want to overwrite it?`)) {
         return;
       }
-      
+
       myQuickLinks[shortcut] = dest;
       await saveLinks(myQuickLinks);
+
+      // Show save confirmation message
+      var msg = document.getElementById('saveMsg');
+      msg.style.display = 'inline';
+      msg.textContent = 'Saved!';
+      setTimeout(function() {
+        msg.style.display = 'none';
+      }, 2000);
 
       if (key) {
         window.location.href = dest;
