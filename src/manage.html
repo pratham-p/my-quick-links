@@ -44,10 +44,13 @@
     <tbody></tbody>
   </table>
 
-  <h3>Backup</h3>
-  <button id="exportBtn">Export Links</button>
-  <input type="file" id="importFile" accept="application/json" style="display:none;">
-  <button id="importBtn">Import Links</button>
+  <h3>Manage Links</h3>
+  <div style="display: flex; gap: 8px; align-items: center;">
+    <button id="manageBtn" style="display: none;">Manage</button>
+    <button id="exportBtn">Export</button>
+    <input type="file" id="importFile" accept="application/json" style="display:none;"/>
+    <button id="importBtn">Import</button>
+  </div>
 
   <script src="manage.js"></script>
 </body>

@@ -1,6 +1,16 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const params = new URLSearchParams(window.location.search);
   const key = params.get("key");
+  const isPopup = params.get("popup") === "true";
+
+  const manageBtn = document.getElementById("manageBtn");
+  if (isPopup) {
+    manageBtn.style.display = "block";
+    manageBtn.addEventListener("click", () => {
+      chrome.runtime.openOptionsPage();
+      window.close(); // Close the popup after opening options
+    });
+  }
 
   const keyInput = document.getElementById("key");
   const urlInput = document.getElementById("url");
@@ -211,7 +221,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
       
       Object.assign(myQuickLinks, imported);
-      await chrome.storage.local.set({ myQuickLinks });
+      await saveLinks(myQuickLinks);
       await loadLinks();
       alert(`Successfully imported ${Object.keys(imported).length} shortcut(s)!`);
     } catch (error) {

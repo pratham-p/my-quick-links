@@ -16,7 +16,7 @@
     "16": "icons/icon16.png"
   },
   "action": {
-    "default_popup": "manage.html",
+    "default_popup": "manage.html?popup=true",
     "default_title": "My Quick Links"
   },
   "omnibox": { 
