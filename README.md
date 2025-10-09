@@ -16,6 +16,11 @@ Build simple keywords for complex or lengthy URLs to navigate, saving time and e
 - Shows the suggested keywords with urls based on user's input.
 - Robust validations and error handling.
 
+## Install Extension
+
+- [Chrome Web Store](https://chromewebstore.google.com/detail/my-quick-links/kgajmbdjhlaeodphelbbjfakodfdejln)
+- [Edge Add-ons Store](https://microsoftedge.microsoft.com/addons/detail/naaafcbioeemoeapclljafgmnkeiaijb)
+
 ## Example Usage
 
 ```text
@@ -28,13 +33,10 @@ my github microsoft → redirects to https://github.com/microsoft
 ## Screenshots
 
 myQuickLinks Extension
-![myQuickLinks extension](images/extension.png)
+![myQuickLinks extension](static/images/extension.png)
 
 Suggestions
-![suggestion](images/suggestion.png)
+![suggestion](static/images/suggestion.png)
 
 Manage Quick Links
-![manage quick links](images/manage.png)
-
-## Privacy
-[Privacy Policy](privacy.md)
+![manage quick links](static/images/manage.png)
