@@ -129,13 +129,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       new URL(dest);
 
       const myQuickLinks = await getLinks();
+      const normalizedShortcut = shortcut.toLowerCase();
 
       // Confirm if overwriting existing shortcut
-      if (myQuickLinks[shortcut] && !confirm(`Shortcut "${shortcut}" already exists. Do you want to overwrite it?`)) {
+      if (myQuickLinks[normalizedShortcut] && !confirm(`Shortcut "${shortcut}" already exists. Do you want to overwrite it?`)) {
         return;
       }
 
-      myQuickLinks[shortcut] = dest;
+      myQuickLinks[normalizedShortcut] = dest;
       await saveLinks(myQuickLinks);
 
       // Show save confirmation message
@@ -211,9 +212,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
       
       // Validate URLs in imported data
+      const importedData = {};
       for (const [key, url] of Object.entries(imported)) {
         try {
           new URL(url);
+          importedData[key.toLowerCase()] = url;
         } catch (error) {
           alert(`Invalid URL found for shortcut "${key}". Import cancelled.`);
           return;
@@ -224,17 +227,17 @@ document.addEventListener("DOMContentLoaded", async () => {
       const myQuickLinks = data.myQuickLinks || {};
       
       // Check for conflicts
-      const conflicts = Object.keys(imported).filter(key => myQuickLinks[key]);
+      const conflicts = Object.keys(importedData).filter(key => myQuickLinks[key]);
       if (conflicts.length > 0) {
         if (!confirm(`${conflicts.length} existing shortcut(s) will be overwritten. Continue?`)) {
           return;
         }
       }
       
-      Object.assign(myQuickLinks, imported);
+      Object.assign(myQuickLinks, importedData);
       await saveLinks(myQuickLinks);
       await loadLinks();
-      alert(`Successfully imported ${Object.keys(imported).length} shortcut(s)!`);
+      alert(`Successfully imported ${Object.keys(importedData).length} shortcut(s)!`);
     } catch (error) {
       console.error('myQuickLinks Extension Error: Unable to import shortcuts:', error);
       if (error instanceof SyntaxError) {

@@ -45,9 +45,9 @@ async function saveLinks(links) {
 chrome.omnibox.onInputEntered.addListener(async (text) => {
   try {
     const myQuickLinks = await getLinks();
-    if (myQuickLinks[text]) {
+    if (myQuickLinks[text.toLowerCase()]) {
       // Redirect to mapped URL
-      chrome.tabs.update({ url: myQuickLinks[text] });
+      chrome.tabs.update({ url: myQuickLinks[text.toLowerCase()] });
     } else {
       // Redirect to manage page to add new shortcut
       chrome.tabs.update({ url: chrome.runtime.getURL(`manage.html?key=${text}`) });
@@ -65,7 +65,7 @@ chrome.omnibox.onInputChanged.addListener(async (text, suggest) => {
 
     // Find matching keys
     const suggestions = Object.keys(myQuickLinks)
-      .filter(key => key.toLowerCase().includes(input))
+      .filter(key => key.includes(input))
       .map(key => ({
         content: key,
         description: `myQuickLink for: ${key} → ${myQuickLinks[key]}`
