@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
   <title>My Quick Links</title>
   <style>
   body { font-family: Arial, sans-serif; margin: 20px; }
@@ -21,10 +22,30 @@
     font-size: 12px;
   }
   .delete-btn:hover { background: #c0392b; }
+
+  .quick-tip {
+    background: #f9fafb; 
+    border: 1px solid #d7e6f3; 
+    border-radius: 8px; 
+    padding: 10px 14px; 
+    margin: 14px 0; 
+    display: flex; 
+    align-items: flex-start; 
+    gap: 8px;
+  }
 </style>
 </head>
 <body>
   <h2 id="title">My Quick Links</h2>
+
+  <div class="quick-tip">
+  <span style="font-size: 16px;">💾</span>
+    <div>
+      <strong style="font-size: 12px; color: #0d6efd;">Quick tip!</strong><br>
+      Your links live in this browser. If the extension is removed, your browser is reset, or your profile is removed, this data might be cleared.<br>
+      To keep them safe, <b>Export</b> a backup regularly — you can always <b>Import</b> it later.
+    </div>
+  </div>
 
   <form id="myForm">
     <label>Shortcut: <input type="text" id="key"></label><br>
