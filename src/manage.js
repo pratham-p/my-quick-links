@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const keyInput = document.getElementById("key");
   const urlInput = document.getElementById("url");
   const tableBody = document.querySelector("#linksTable tbody");
+  const searchInput = document.getElementById("searchInput");
 
   if (key) {
     document.getElementById("title").textContent = `Add new shortcut: ${key}`;
@@ -66,6 +67,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     await Promise.all(savePromises);
   }
 
+  // Filter table rows based on search term
+  function filterTable(searchTerm) {
+    if (!searchInput || isPopup) return; // Only filter if not in popup mode
+    
+    const rows = tableBody.querySelectorAll("tr");
+    const term = searchTerm.toLowerCase().trim();
+    
+    rows.forEach(row => {
+      const shortcut = row.cells[0]?.textContent.toLowerCase() || "";
+      const url = row.cells[1]?.textContent.toLowerCase() || "";
+      
+      if (term === "" || shortcut.includes(term) || url.includes(term)) {
+        row.style.display = "";
+      } else {
+        row.style.display = "none";
+      }
+    });
+  }
+
   // Load and render links in table
   async function loadLinks() {
     try {
@@ -101,12 +121,24 @@ document.addEventListener("DOMContentLoaded", async () => {
       tr.appendChild(tdAction);
       tableBody.appendChild(tr);
     }
+    
+    // Apply current search filter after loading
+    if (searchInput) {
+      filterTable(searchInput.value);
+    }
     } catch (error) {
       console.error('myQuickLinks Extension Error: Unable to load links:', error);
       alert('Failed to load shortcuts. Please try refreshing the page.');
     }
   }
   await loadLinks();
+
+  // Add search functionality (only when not in popup mode)
+  if (searchInput && !isPopup) {
+    searchInput.addEventListener("input", (e) => {
+      filterTable(e.target.value);
+    });
+  }
 
   // Handle form submit
   document.getElementById("myForm").addEventListener("submit", async (e) => {
