@@ -1,6 +1,6 @@
 {
     "name": "my-quick-links",
-    "version": "1.2.2",
+    "version": "1.2.4",
     "description": "Create and manage custom short links for quick access to your favorite sites.",
     "scripts": {
         "clean": "rm -rf dist && rm -rf artifacts && rm -f artifacts/my-quick-links.zip",
