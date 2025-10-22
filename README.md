@@ -35,8 +35,8 @@ my github microsoft → redirects to https://github.com/microsoft
 myQuickLinks Extension
 ![myQuickLinks extension](static/images/extension.png)
 
-Suggestions
-![suggestion](static/images/suggestion.png)
-
 Manage Quick Links
 ![manage quick links](static/images/manage.png)
+
+Suggestions
+![suggestion](static/images/suggestion.png)
